@@ -10,15 +10,18 @@ const isWithinNDays = (n, prev, last) => {
 }
 
 const isToday = day => moment(day).startOf('day').isSame(moment().startOf('day'))
+var i = 0;
 
-const streaker = ({ last, count }, prev) => {
+const streaker = (prev, { last, count }) => {
     if (isToday(prev)) return { last, count: 1 }
+    
     if (isWithinNDays(0, prev, last)) return { last, count }
     if (isWithinNDays(1, prev, last)) return { last: prev, count: count + 1 }
-    return reduced({ last, count })
+    //reduced({ last, count })
+    return { last, count }
 }
 
-const computeStreak = compose(prop('count'), reduceRight(streaker, { last: moment(), count: 0 }))
+const computeStreak = compose(prop('count'), reduceRight(streaker, { count: 0, last: moment() }))
 
 
 export default ({ learned }) => <Card bg="info" text="white" style={{ width: '18rem' }}>
@@ -26,6 +29,7 @@ export default ({ learned }) => <Card bg="info" text="white" style={{ width: '18
     <Card.Body>
         {//<Card.Title>Days In A Row</Card.Title>
         }<Card.Text>
+            {console.log(learned)} 
             {computeStreak(learned)}<br />
             Days In A Row
         </Card.Text>
